@@ -1,10 +1,16 @@
 using ExpensesTracker.Data;
 using ExpensesTracker.Models;
+using ExpensesTracker.Services;
+using ExpensesTracker.Services.Interfaces;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 using ToDoApp.Middlewares;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,10 +47,35 @@ builder.Services
     {
         //fv.RegisterValidatorsFromAssemblyContaining<>();
     });
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+
+//configure swagger 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+//configuring jwt for Authentification   
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+        )
+    };
+});
 
 
 
@@ -56,6 +87,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 // adding Authorisation and Authentification 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
+
+//Services Injection
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
 
 var app = builder.Build();
 
