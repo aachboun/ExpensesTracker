@@ -1,4 +1,4 @@
-﻿//using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -46,7 +46,7 @@ namespace ToDoApp.Middlewares
 
             ProblemDetails problem = exception switch
             {
-                ValidationException ve => CreateValidationProblem(ve),
+                FluentValidation.ValidationException ve => CreateValidationProblem(ve),
                 KeyNotFoundException => CreateProblem(
                     StatusCodes.Status404NotFound,
                     "Resource not found",
@@ -69,7 +69,8 @@ namespace ToDoApp.Middlewares
             );
         }
 
-        private ProblemDetails CreateValidationProblem(ValidationException exception)
+        private ProblemDetails CreateValidationProblem(
+            FluentValidation.ValidationException exception)
         {
             return new ValidationProblemDetails(
                 exception.Errors

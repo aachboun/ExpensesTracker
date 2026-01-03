@@ -1,10 +1,29 @@
 using ExpensesTracker.Data;
 using ExpensesTracker.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using ToDoApp.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// CONFIGURATION SERILOG
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File(
+        "Logs/log-.txt",
+        rollingInterval: RollingInterval.Day
+    )
+    .CreateLogger();
+
+// Remplacer le logger par défaut
+builder.Host.UseSerilog();
+
+builder.Logging.ClearProviders();
+
 
 // Adding EF core registration 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -14,9 +33,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 
 
-// Add services to the container.
+// Add services to the container and Fluent Validation 
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddFluentValidation(fv =>
+    {
+        //fv.RegisterValidatorsFromAssemblyContaining<>();
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
