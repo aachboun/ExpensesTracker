@@ -1,6 +1,6 @@
 using ExpensesTracker.Data;
 using ExpensesTracker.Models;
-using ExpensesTracker.Services;
+using ExpensesTracker.Services.Auth;
 using ExpensesTracker.Services.Interfaces;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
