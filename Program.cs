@@ -1,11 +1,13 @@
 using ExpensesTracker.Data;
+using ExpensesTracker.Mapping;
 using ExpensesTracker.Models;
-using ExpensesTracker.Services.Auth;
+using ExpensesTracker.Services;
 using ExpensesTracker.Services.Interfaces;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
@@ -76,6 +78,9 @@ builder.Services.AddAuthentication(options =>
         )
     };
 });
+
+//adding Autmapping 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 

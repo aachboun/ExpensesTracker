@@ -3,7 +3,7 @@ using ExpensesTracker.Models;
 using ExpensesTracker.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
-namespace ExpensesTracker.Services.Auth
+namespace ExpensesTracker.Services
 {
     public class AuthService : IAuthService
     {

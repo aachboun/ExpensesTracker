@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ExpensesTracker.Services.Auth
+namespace ExpensesTracker.Services
 {
     public class JwtService : IJwtService
     {

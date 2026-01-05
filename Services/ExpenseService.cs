@@ -3,7 +3,7 @@ using ExpensesTracker.Models;
 using ExpensesTracker.Services.Interfaces;
 
 
-namespace ExpensesTracker.Services.Expense
+namespace ExpensesTracker.Services
 {
     public class Expense : IExpense
     {
