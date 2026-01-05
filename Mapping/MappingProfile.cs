@@ -16,6 +16,7 @@ namespace ExpensesTracker.Mapping
 
             // Expense -> ExpenseDto (exemple futur)
             CreateMap<CreateExpenseDto, Expense>();
+            CreateMap<Expense, ReadExpenseDto>();
         }
     }
 }
