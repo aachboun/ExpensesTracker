@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ExpensesTracker.DTOs.Auth;
+using ExpensesTracker.DTOs.Category;
 using ExpensesTracker.DTOs.Expense;
 using ExpensesTracker.Models;
 
@@ -17,6 +18,10 @@ namespace ExpensesTracker.Mapping
             // Expense -> ExpenseDto (exemple futur)
             CreateMap<CreateExpenseDto, Expense>();
             CreateMap<Expense, ReadExpenseDto>();
+            // Category
+            CreateMap<CreateCategoryDto, Category>();
+            CreateMap<Category, ReadCategoryDto>();
+
         }
     }
 }

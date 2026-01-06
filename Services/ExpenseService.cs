@@ -1,16 +1,16 @@
 ﻿using ExpensesTracker.DTOs.Expense;
 using ExpensesTracker.Models;
-using ExpensesTracker.Repositories;
 using ExpensesTracker.Services.Interfaces;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.VisualBasic;
+using ExpensesTracker.Repositories.Interfaces;
 
 
 namespace ExpensesTracker.Services
 {
-    public class ExpenseService : IExpense
+    public class ExpenseService : IExpenseService
     {
 
         private readonly IExpenseRepository _expenseRepository;
@@ -24,25 +24,24 @@ namespace ExpensesTracker.Services
             _mapper = mapper;
         }
 
-        public async Task CreateAsync(CreateExpenseDto dto , string UserId)
+        public async Task<int> CreateAsync(CreateExpenseDto dto , string UserId)
         {
+            _logger.LogInformation("Creating Expense| Id : {Id} |UserId: {UserId}",  UserId);
             var expense = _mapper.Map<Expense>(dto);
             expense.UserId = UserId;
            
              await _expenseRepository.AddAsync(expense);
-            await _expenseRepository.SaveChangesAsync();   
+            await _expenseRepository.SaveChangesAsync();
 
+            _logger.LogInformation("Expense Created | Id : {Id} |UserId: {UserId}",expense.Id,  UserId);
 
+            return expense.Id;
         }
 
       
         public async  Task<List<ReadExpenseDto>> GetAllExpenses(string UserId)
         {
             var expenses = await _expenseRepository.GetExpenses(UserId);
-            if (expenses == null)
-            {
-                return null;
-            }
 
             return _mapper.Map<List<ReadExpenseDto>>(expenses);
         }
@@ -51,24 +50,38 @@ namespace ExpensesTracker.Services
            var expense = await _expenseRepository.GetById(id, UserId);
             if (expense == null)
             {
-                return null;
+                _logger.LogWarning("Expense not found | Id: {Id} | UserId: {UserId}", id, UserId);
+                throw new KeyNotFoundException("Expense not found");
             }
             return _mapper.Map<ReadExpenseDto>(expense);    
         }
-        public async Task DeleteAsync(int id , string userId)
+        public async Task DeleteAsync(int id , string UserId)
         {
-            var expense = await _expenseRepository.GetById(id, userId);
-            
+            var expense = await _expenseRepository.GetById(id, UserId);
+            if (expense == null)
+            {
+                _logger.LogWarning("Delete Failed | Id: {Id} | UserId: {UserId}", id, UserId);
+                throw new KeyNotFoundException("Expense not found");
+            }
             _expenseRepository.DeleteAsync(expense);
             await _expenseRepository.SaveChangesAsync();
 
+            _logger.LogInformation("Expense Deleted | Id : {Id} |UserId: {UserId}", id , UserId);
         }
         public async Task UpdateExpense( int id ,UpdateExpenseDto dto , string UserId)
         {
             var expense = await _expenseRepository.GetById(id , UserId);
+
+            if (expense == null)
+            {
+                _logger.LogWarning("Update Failed | Id: {Id} | UserId: {UserId}", id, UserId);
+                throw new KeyNotFoundException("Expense not found");
+            }
+
             _mapper.Map(dto, expense);
             await _expenseRepository.SaveChangesAsync();
 
+            _logger.LogInformation("Expense Updated | Id : {Id} |UserId: {UserId}", id, UserId);
         }
     }
 }

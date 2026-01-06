@@ -1,6 +1,6 @@
 ﻿using ExpensesTracker.Models;
 
-namespace ExpensesTracker.Repositories
+namespace ExpensesTracker.Repositories.Interfaces
 {
     public interface IExpenseRepository
     {

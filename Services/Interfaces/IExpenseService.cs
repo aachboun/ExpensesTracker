@@ -6,9 +6,9 @@
 
 namespace ExpensesTracker.Services.Interfaces
 {
-    public interface IExpense
+    public interface IExpenseService
     {
-        Task CreateAsync(CreateExpenseDto dto , string UserId);
+        Task<int> CreateAsync(CreateExpenseDto dto , string UserId);
         Task DeleteAsync( int id ,string UserId);
         Task<ReadExpenseDto> GetExpense(int id ,string UserId);
         Task<List<ReadExpenseDto>> GetAllExpenses(string  UserId);   

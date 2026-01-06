@@ -1,5 +1,6 @@
 ﻿using ExpensesTracker.Data;
 using ExpensesTracker.Models;
+using ExpensesTracker.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
