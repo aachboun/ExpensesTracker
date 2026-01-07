@@ -1,330 +1,208 @@
-💰 ExpensesTracker API
+## 💰 ExpensesTracker – ASP.NET Core Backend Project
 
+## 📌 Overview
 
+ExpensesTracker is a backend application built with ASP.NET Core (.NET 8) designed to help users track, categorize, and analyze their personal expenses.
 
-ExpensesTracker is a secure RESTful API built with ASP.NET Core (.NET 8) that allows users to manage their personal expenses.
+The project focuses on real-world backend development practices, including clean architecture, authentication, validation, logging, and unit testing.
 
-It enables authenticated users to organize expenses by category, define budgets, and track their financial data securely.
+This application was developed as a portfolio and learning project to demonstrate readiness for a Junior .NET Backend Developer position.
 
+## 🛠️ Tech Stack
 
-
-This project was developed following real-world enterprise best practices in terms of architecture, validation, logging, and error handling.
-
-
-
-🚀 Key Features
-
-
-
-🔐 Authentication \& Authorization using ASP.NET Identity + JWT
-
-
-
-👤 Multi-user support (data isolated per user)
-
-
-
-🗂️ Category management
-
-
-
-💸 Expense management (CRUD)
-
-
-
-📊 Budget management per category
-
-
-
-✅ Input validation with FluentValidation
-
-
-
-🧩 Layered architecture (Controllers / Services / Repositories)
-
-
-
-🧠 Global exception handling (custom middleware)
-
-
-
-🪵 Structured logging with Serilog
-
-
-
-📘 API documentation with Swagger / OpenAPI
-
-
-
-🧪 Unit testing with xUnit (business logic covered)
-
-
-
-🏗️ Project Architecture
-
-
-
-The project follows a clean and maintainable layered architecture:
-
-
-
-ExpensesTracker
-
-│
-
-├── Controllers        → API Controllers
-
-├── Services           → Business logic layer
-
-├── Repositories       → Data access layer (EF Core)
-
-├── DTOs               → Data Transfer Objects
-
-├── Models             → Domain entities
-
-├── Validators         → FluentValidation rules
-
-├── Middlewares        → Global exception handling
-
-├── Data               → DbContext \& EF Core configuration
-
-
-
-
-
-This structure ensures:
-
-
-
-Separation of concerns
-
-
-
-Testability
-
-
-
-Maintainability
-
-
-
-Scalability
-
-
-
-🛠️ Tech Stack
-
-
-
-ASP.NET Core 8
-
-
+ASP.NET Core (.NET 8)
 
 Entity Framework Core
 
-
-
-SQL Server
-
-
-
 ASP.NET Identity
 
+JWT Authentication
 
-
-JWT (JSON Web Tokens)
-
-
+SQL Server
 
 AutoMapper
 
-
-
 FluentValidation
-
-
 
 Serilog
 
+Swagger (OpenAPI)
 
+xUnit (Unit Testing)
 
-Swagger / OpenAPI
+## 🧱 Architecture & Design
 
+The application follows a **layered architecture** commonly used in enterprise environments:
+...
+Controllers (API)
+Services (Business Logic)
+Repositories (Data Access)
+DTOs
+Validators
+Middlewares
+...
+## Key Principles:
 
+Separation of Concerns
 
-🧪 Validation \& Error Handling
+Dependency Injection
 
+SOLID principles
 
+Clean and testable code
 
-All incoming requests are validated using FluentValidation
+## 🔐 Authentication & Authorization
 
+Authentication implemented using ASP.NET Identity + JWT
 
+Secure login and registration endpoints
 
-Errors are handled centrally via a global exception middleware
+Each resource is linked to the authenticated user
 
+API endpoints protected using [Authorize]
 
+## 💳 Core Features
+**Expenses**
 
-API error responses follow the ProblemDetails standard
+Create, update, delete expenses
 
+Each expense is linked to a category
 
+Expenses belong to a specific user
 
-All unhandled exceptions are logged using Serilog
+Expense statistics by date and category
 
+**Categories**
 
+User-defined expense categories
 
-🪵 Logging (Serilog)
+Each category belongs to a single user
 
+Categories used to organize expenses
 
+**Budgets**
 
-The application uses Serilog for structured and centralized logging:
+Budget management per category
 
+Track spending against defined budgets
 
+Designed for future monthly statistics and reporting
 
-Informational logs for business actions
+## 🔄 API Design
 
+RESTful API design
 
+Clear resource-based endpoints
 
-Warning logs for unexpected business cases
+Proper HTTP status codes (200, 201, 400, 401, 404, 500)
 
+Fully documented with Swagger
 
+Example endpoints:
 
-Error logs captured globally
+POST   /api/expenses
+GET    /api/expenses
+GET    /api/expenses/{id}
+PUT    /api/expenses/{id}
+DELETE /api/expenses/{id}
 
+## ✅ Validation
 
+Validation implemented using FluentValidation
 
-Logs written to console and rolling log files
+DTO-based validation
 
+Automatic validation for API requests
 
+Centralized error responses via global exception middleware
 
-📘 API Documentation (Swagger)
+Examples:
 
+Amount must be greater than zero
 
+Required fields validation
 
-Swagger is enabled for API exploration and testing.
+Date validation
 
+## 🧠 Business Logic (Services)
 
+Business logic isolated in the Service layer
 
-After running the application:
+Controllers remain thin
 
+Logging added at critical business steps
 
+Domain rules enforced in services
 
-https://localhost:{port}/swagger
+## 🧾 Logging & Error Handling
 
+Centralized Global Exception Middleware
 
+Logging implemented with Serilog
 
-▶️ Running the Project Locally
+Logs include:
 
-Prerequisites
+Business operations
 
+Warnings
 
+Errors
 
-.NET SDK 8
+Designed to work in both development and production environments
 
+## 🧪 Unit Testing
 
+Unit tests implemented using xUnit
 
-SQL Server
+Service layer tested independently
 
+Repository dependencies mocked
 
+Tests executed using:
 
-Visual Studio or VS Code
+dotnet test
 
-
-
-Steps
-
-
+## 🚀 How to Run the Project
 
 Clone the repository
 
+Configure the database connection string
 
-
-git clone https://github.com/YOUR-USERNAME/ExpensesTracker.git
-
-
-
-
-
-Configure the database connection
-
-Update appsettings.json
-
-
-
-Apply database migrations
-
-
+Apply migrations:
 
 dotnet ef database update
 
 
-
-
-
-Run the application
-
-
+Run the application:
 
 dotnet run
 
 
+Open Swagger UI:
 
-🎯 Project Purpose
+https://localhost:{port}/swagger
 
-
+## 🎯 Why This Project?
 
 This project was built to:
 
-
-
 Practice professional backend development with .NET
 
+Apply enterprise-level architectural patterns
 
+Demonstrate secure API development
 
-Apply enterprise-level architecture patterns
+Strengthen backend-focused portfolio
 
+👤 Author
 
-
-Demonstrate backend skills for a Junior .NET Developer role
-
-
-
-👨‍💻 Author
-
-
-
-Developed by \[Your Name]
-
-Backend .NET Developer
-
+**Redouan Aachboun**
+	
+Junior .NET Backend Developer
 📍 Spain
 
-GitHub: https://github.com/YOUR-USERNAME
+🔗 GitHub: https://github.com/aachboun
 
+🔗 LinkedIn: https://www.linkedin.com/in/redouan-aachboun-a798a32ab/
 
-
-📌 Notes
-
-
-
-This project intentionally follows enterprise-grade practices:
-
-
-
-Clean architecture
-
-
-
-Business logic separation
-
-
-
-Secure authentication
-
-
-
-Centralized error handling
-
-
-
-Structured logging
-
+⭐ Feedback and suggestions are welcome!
