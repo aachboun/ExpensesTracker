@@ -194,7 +194,7 @@ Demonstrate secure API development
 
 Strengthen backend-focused portfolio
 
-👤 Author
+## 👤 Author
 
 **Redouan Aachboun**
 	
