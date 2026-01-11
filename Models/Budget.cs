@@ -8,7 +8,7 @@
 
         public DateTime EffectiveFrom { get; set; }
         public DateTime? EffectiveTo { get; set; }
-        public DateTime? UpadatedAt { get; set; }
+       
 
         public int CategoryId { get; set; }
         public Category Category { get; set; }

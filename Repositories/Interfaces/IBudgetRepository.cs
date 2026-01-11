@@ -7,8 +7,8 @@ namespace ExpensesTracker.Repositories.Interfaces
     {
         Task<Budget> GetByIdAsync(int id,  string UserId);
         Task AddAsync(Budget budget);
-        Task Delete(Budget budget);
-        Task SaveCahngesAsync();
+        void Delete(Budget budget);
+        Task SaveChangesAsync();
 
     }
 }
