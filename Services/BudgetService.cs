@@ -23,7 +23,7 @@ namespace ExpensesTracker.Services
 
         public async Task<ReadBudgetDto> GetByIdAsync(int id , string UserId)
         {
-            var budget = await _budgetRepository.GetByIdAsync(id, UserId);
+            var budget = await _budgetRepository.GetGlobaleByIdAsync(id, UserId);
             if (budget == null) 
             {
               _logger.LogWarning("Budgte Not Found | Id:{id}, UserId:{UserId}",id , UserId);
@@ -48,7 +48,7 @@ namespace ExpensesTracker.Services
         }
         public async Task Delete(int id , string UserId)
         {
-            var budget = await _budgetRepository.GetByIdAsync(id, UserId);  
+            var budget = await _budgetRepository.GetGlobaleByIdAsync(id, UserId);  
             if(budget == null)
             {
                 _logger.LogWarning(" Delete Failed | Budget Not found | id :{Id}, UserId : {UserId}", id, UserId);
@@ -62,7 +62,7 @@ namespace ExpensesTracker.Services
 
         public async Task UpdateBudgetAsync(int id, UpdateBudgetDto dto, string UserId)
         {
-            var oldbudget = await _budgetRepository.GetByIdAsync(id, UserId);
+            var oldbudget = await _budgetRepository.GetGlobaleByIdAsync(id, UserId);
             if (oldbudget == null)
             {
                 _logger.LogWarning("failed to find budget | id : {id}, UserId:{UserId}", id, UserId);
