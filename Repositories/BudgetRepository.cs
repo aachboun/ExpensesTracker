@@ -15,16 +15,22 @@ namespace ExpensesTracker.Repositories
 
             }
 
-        public async Task<Budget> GetGlobaleByIdAsync(int id , string UserId)
+        public async Task<Budget> GetCurrentBudgetAsync(int? CategoryId , string UserId)
         {
            return await _context.Budgets.
-                FirstOrDefaultAsync(b=>b.Id == id && b.UserId==UserId);
+                FirstOrDefaultAsync(b=>
+                b.CategoryId == CategoryId && 
+                b.UserId==UserId &&
+                b.EffectiveTo == null);
 
         }
-        public async Task<Budget> GetGlobaleByIdAndPeriodeAsync(int id ,string UserId, DateTime from , DateTime To)
+        public async Task<Budget> GetByPeriodeAsync(int? CategoryId ,string UserId, DateOnly from , DateOnly To)
         {
             return await _context.Budgets.
-                Where(b => b.Id == id && b.UserId == UserId && b.EffectiveFrom == from && b.EffectiveTo == To)
+                Where(b => b.CategoryId == CategoryId && 
+                b.UserId == UserId &&
+                b.EffectiveFrom <= To && 
+                b.EffectiveTo ==null ||b.EffectiveTo >= from)
                 .FirstOrDefaultAsync();
         }
         public async Task AddAsync(Budget budget)
@@ -35,20 +41,8 @@ namespace ExpensesTracker.Repositories
         {
              _context.Budgets.Remove(budget);
         }
-        public async Task<Budget> GetByCategory(int CategoryId, string UserId)
-        {
-            return await _context.Budgets
-                .FirstOrDefaultAsync(b=>b.CategoryId == CategoryId && b.UserId==UserId);
-        }
-        public async Task<Budget> GetByCatAndPeriode(int CategoryId, string UserId, DateTime from , DateTime To)
-        {
-            return await _context.Budgets
-                .Where(
-                b => b.CategoryId == CategoryId && b.UserId == UserId
-                && b.EffectiveFrom == from && b.EffectiveTo == To)
-                .FirstOrDefaultAsync();
-                
-        }
+     
+      
 
         public async Task SaveChangesAsync()
         {

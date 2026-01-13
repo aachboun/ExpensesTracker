@@ -1,6 +1,7 @@
 ﻿using ExpensesTracker.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 
 namespace ExpensesTracker.Data
@@ -32,6 +33,17 @@ namespace ExpensesTracker.Data
                 .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<Budget>()
+                .Property(b => b.EffectiveFrom)
+                .HasConversion(
+                    d => d.ToDateTime(TimeOnly.MinValue),
+                    d => DateOnly.FromDateTime(d));
+
+            builder.Entity<Budget>()
+                .Property(b => b.EffectiveTo)
+                .HasConversion<DateTime?>(
+                    d => d.HasValue ? d.Value.ToDateTime(TimeOnly.MinValue) : null,
+                    d => d.HasValue ? DateOnly.FromDateTime(d.Value) : null);
 
             builder.Entity<Budget>()
                 .Property(b => b.Amount)
