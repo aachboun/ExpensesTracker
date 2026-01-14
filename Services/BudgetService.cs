@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ExpensesTracker.DTOs.Budget;
-using ExpensesTracker.Repositories;
+using ExpensesTracker.Repositories.Interfaces;
 using ExpensesTracker.Services.Interfaces;
 using ExpensesTracker.Models;
 
@@ -9,18 +9,28 @@ namespace ExpensesTracker.Services
 {
     public class BudgetService: IBudgetService
     {
-        private readonly BudgetRepository _budgetRepository;
+        private readonly IBudgetRepository _budgetRepository;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
+        private readonly ILogger<BudgetService> _logger;
 
 
-        public BudgetService(BudgetRepository budgetRepository, IMapper mapper, ILogger logger)
+        public BudgetService(IBudgetRepository budgetRepository, IMapper mapper, ILogger<BudgetService> logger)
         {
             _budgetRepository = budgetRepository;
             _mapper = mapper;
             _logger = logger;
         }
+        public async Task <ReadBudgetDto> GetByPeriodeAsync(int? CategoryId,string UserId, DateOnly from , DateOnly To)
+        {
+            var budget = await _budgetRepository.GetByPeriodeAsync(CategoryId, UserId,from,To);
+            if (budget == null)
+            {
+                _logger.LogWarning("Budgte Not Found | CategoryId:{id}, UserId:{UserId}", CategoryId, UserId);
+                throw new KeyNotFoundException("Budget Not Found ");
 
+            }
+            return _mapper.Map<ReadBudgetDto>(budget);
+        }
         public async Task<ReadBudgetDto> GetByIdAsync(int? CategoryId , string UserId)
         {
             var budget = await _budgetRepository.GetCurrentBudgetAsync(CategoryId, UserId);
@@ -36,6 +46,16 @@ namespace ExpensesTracker.Services
         public async Task<int> CreateAsync(CreateBudgetDto dto, string UserId)
         {
             _logger.LogInformation("Creating  budget userid: {UserId}", UserId);
+
+            var existing = await _budgetRepository
+                 .GetCurrentBudgetAsync(dto.CategoryId, UserId);
+
+            if (existing != null)
+            {
+                _logger.LogWarning(" Delete Failed | Budget Not found | id :{Id}, UserId : {UserId}", existing.Id, UserId);
+                throw new InvalidOperationException("An active budget already exists");
+            }
+
             var budget = _mapper.Map<Budget>(dto);
             budget.UserId = UserId;
             budget.EffectiveFrom = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -60,27 +80,36 @@ namespace ExpensesTracker.Services
             _logger.LogInformation(" Budget deleted| id : {Id}, UserId:{UserId}",CategoryId, UserId);
         }
 
-        public async Task UpdateBudgetAsync(int? CategoryId, UpdateBudgetDto dto, string UserId)
+        public async Task UpdateBudgetAsync(int? categoryId, UpdateBudgetDto dto, string userId)
         {
-            var oldbudget = await _budgetRepository.GetCurrentBudgetAsync(CategoryId, UserId);
-            if (oldbudget == null)
+            var currentBudget = await _budgetRepository
+                .GetCurrentBudgetAsync(categoryId, userId);
+
+            if (currentBudget == null)
             {
-                _logger.LogWarning("failed to find budget | id : {id}, UserId:{UserId}", CategoryId, UserId);
-                throw new KeyNotFoundException("Budget Not found ");
+                _logger.LogWarning(
+                    "Budget not found | CategoryId:{CategoryId}, UserId:{UserId}",
+                    categoryId, userId);
+
+                throw new KeyNotFoundException("Budget not found");
             }
-           
-            
-            var newbudget = oldbudget;
-            newbudget.EffectiveFrom = DateOnly.FromDateTime(DateTime.UtcNow);
-            oldbudget.EffectiveTo = DateOnly.FromDateTime(DateTime.UtcNow);
-            _mapper.Map(dto,oldbudget);
-            
-            await _budgetRepository.AddAsync(newbudget);
+
+            // 1️⃣ Fermer l’ancien budget
+            currentBudget.EffectiveTo = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            // 2️⃣ Créer le nouveau budget
+            var newBudget = _mapper.Map<Budget>(currentBudget);
+            newBudget.Id = 0;
+            newBudget.EffectiveFrom = DateOnly.FromDateTime(DateTime.UtcNow);
+            newBudget.EffectiveTo = null;
+            _mapper.Map(dto, newBudget);
+            await _budgetRepository.AddAsync(newBudget);
             await _budgetRepository.SaveChangesAsync();
 
+            _logger.LogInformation(
+                "Budget updated successfully | CategoryId:{CategoryId}, UserId:{UserId}",
+                categoryId, userId);
+        }
 
-            _logger.LogInformation(" Budget Updated succesfully | id :{id},UserId:{UserId}", CategoryId, UserId);
-
-        } 
     }
 }

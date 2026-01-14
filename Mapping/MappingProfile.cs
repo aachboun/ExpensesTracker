@@ -25,6 +25,10 @@ namespace ExpensesTracker.Mapping
             //Budget
             CreateMap<Budget,ReadCategoryDto>();
             CreateMap<CreateBudgetDto,Budget>();
+            CreateMap<Budget, Budget>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.EffectiveTo, opt => opt.Ignore())
+                .ForMember(d => d.EffectiveFrom, opt => opt.Ignore());
 
         }
     }
