@@ -1,4 +1,5 @@
-﻿using ExpensesTracker.Models;
+﻿using ExpensesTracker.DTOs.Budget;
+using ExpensesTracker.Models;
 using ExpensesTracker.Services;
 using ExpensesTracker.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +22,11 @@ namespace ExpensesTracker.Controllers.API
             _budgetService = budgetService;
             _userManager = userManager;
         }
+        [HttpPost]
+        public async Task<IActionResult> CreateBudgetAsync([FromBody] CreateBudgetDto dto)
+        {
+            return null;
 
+        }
     }
 }
