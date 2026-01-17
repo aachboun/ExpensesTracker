@@ -43,12 +43,12 @@ namespace ExpensesTracker.Services
           return _mapper.Map<ReadBudgetDto>(budget);
         }
 
-        public async Task<int> CreateAsync(CreateBudgetDto dto, string UserId)
+        public async Task<int> CreateAsync(CreateBudgetDto dto, string UserId, int? CategoryId)
         {
             _logger.LogInformation("Creating  budget userid: {UserId}", UserId);
 
             var existing = await _budgetRepository
-                 .GetCurrentBudgetAsync(dto.CategoryId, UserId);
+                 .GetCurrentBudgetAsync(CategoryId, UserId);
 
             if (existing != null)
             {

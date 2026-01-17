@@ -8,8 +8,8 @@ namespace ExpensesTracker.Services.Interfaces
 
         Task <ReadBudgetDto> GetByIdAsync(int? CategoryId, string UserId);
         Task<ReadBudgetDto> GetByPeriodeAsync(int? CategoryId, string UserId, DateOnly from, DateOnly To);
-        Task<int> CreateAsync (CreateBudgetDto dto , string UserId);
+        Task<int> CreateAsync (CreateBudgetDto dto , string UserId, int? CategorId);
         Task Delete(int? CategoryId, string UserId);
-        Task UpdateBudgetAsync(int? @intCategoryId, UpdateBudgetDto dto , string UserId);
+        Task UpdateBudgetAsync(int? intCategoryId, UpdateBudgetDto dto , string UserId);
     }
 }
