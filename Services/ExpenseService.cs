@@ -55,33 +55,44 @@ namespace ExpensesTracker.Services
             }
             return _mapper.Map<ReadExpenseDto>(expense);    
         }
-        public async Task DeleteAsync(int id , string UserId)
+        public async Task<List<ReadExpenseDto>> GetByPeriod(string UserId, DateOnly From, DateOnly To)
         {
-            var expense = await _expenseRepository.GetById(id, UserId);
+            var expenses = await _expenseRepository.GetByPeriod(UserId, From, To);
+            return _mapper.Map<List<ReadExpenseDto>>(expenses);
+        }
+
+        public async Task<List<ReadExpenseDto>> GetByCatAndPeriod(int CategoryId, string UserId, DateOnly From, DateOnly To)
+        {
+            var expenses = await _expenseRepository.GetByCatAndPeriod(CategoryId,UserId, From, To);
+            return _mapper.Map<List<ReadExpenseDto>>(expenses);
+        }
+        public async Task DeleteAsync(int CategoryId , string UserId)
+        {
+            var expense = await _expenseRepository.GetById(CategoryId, UserId);
             if (expense == null)
             {
-                _logger.LogWarning("Delete Failed | Id: {Id} | UserId: {UserId}", id, UserId);
+                _logger.LogWarning("Delete Failed | Id: {Id} | UserId: {UserId}", CategoryId, UserId);
                 throw new KeyNotFoundException("Expense not found");
             }
-            _expenseRepository.DeleteAsync(expense);
+            _expenseRepository.Delete(expense);
             await _expenseRepository.SaveChangesAsync();
 
-            _logger.LogInformation("Expense Deleted | Id : {Id} |UserId: {UserId}", id , UserId);
+            _logger.LogInformation("Expense Deleted | Id : {Id} |UserId: {UserId}", CategoryId , UserId);
         }
-        public async Task UpdateExpense( int id ,UpdateExpenseDto dto , string UserId)
+        public async Task UpdateExpense( int CategoryId ,UpdateExpenseDto dto , string UserId)
         {
-            var expense = await _expenseRepository.GetById(id , UserId);
+            var expense = await _expenseRepository.GetById(CategoryId , UserId);
 
             if (expense == null)
             {
-                _logger.LogWarning("Update Failed | Id: {Id} | UserId: {UserId}", id, UserId);
+                _logger.LogWarning("Update Failed | Id: {Id} | UserId: {UserId}", CategoryId, UserId);
                 throw new KeyNotFoundException("Expense not found");
             }
 
             _mapper.Map(dto, expense);
             await _expenseRepository.SaveChangesAsync();
 
-            _logger.LogInformation("Expense Updated | Id : {Id} |UserId: {UserId}", id, UserId);
+            _logger.LogInformation("Expense Updated | Id : {Id} |UserId: {UserId}", CategoryId, UserId);
         }
     }
 }

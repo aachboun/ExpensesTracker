@@ -11,8 +11,7 @@ namespace ExpensesTracker.Validators
             RuleFor(x => x.Amount)
                 .GreaterThan(0);
 
-            RuleFor(x => x.CategoryId)
-                .GreaterThan(0);
+          
         }
     }
 }

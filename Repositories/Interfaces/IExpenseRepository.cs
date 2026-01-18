@@ -1,4 +1,5 @@
 ﻿using ExpensesTracker.Models;
+using System.Globalization;
 
 namespace ExpensesTracker.Repositories.Interfaces
 {
@@ -6,9 +7,11 @@ namespace ExpensesTracker.Repositories.Interfaces
     {
 
         Task<List<Expense>> GetExpenses(string UserId);
-        Task<Expense> GetById(int id,string UserId);
+        Task<Expense> GetById(int CategoryId,string UserId);
+        Task<List<Expense>> GetByPeriod(string UserId, DateOnly From , DateOnly To);
+        Task<List<Expense>> GetByCatAndPeriod(int CategoryId, string UserId, DateOnly From, DateOnly To);
         Task AddAsync(Expense expense);
-        void DeleteAsync(Expense expense);
+        void Delete(Expense expense);
         Task SaveChangesAsync();
     }
 }

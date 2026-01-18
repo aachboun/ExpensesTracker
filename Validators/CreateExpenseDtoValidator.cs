@@ -17,9 +17,6 @@ namespace ExpensesTracker.Validators
                 .LessThanOrEqualTo(DateTime.UtcNow)
                 .WithMessage("Expense date cannot be in the future");
 
-            RuleFor(x => x.CategoryId)
-                .GreaterThan(0)
-                .WithMessage("Category is required");
 
             RuleFor(x => x.Description)
                 .MaximumLength(300);

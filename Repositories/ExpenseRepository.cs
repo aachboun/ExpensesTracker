@@ -22,18 +22,41 @@ namespace ExpensesTracker.Repositories
                    .OrderByDescending(t=>t.Date)
                    .ToListAsync();    
         }
-        public async Task<Expense> GetById(int id ,string UserId)
+        public async Task<Expense> GetById(int CategoryId ,string UserId)
         {
             return await _context.Expenses
-                .FirstOrDefaultAsync(e => e.Id == id &&  e.UserId == UserId);
+                .FirstOrDefaultAsync(e => e.CategoryId== CategoryId &&  e.UserId == UserId);
 
+        }
+        public async Task<List<Expense>> GetByPeriod(string UserId, DateOnly From, DateOnly To)
+        {
+            return await _context.Expenses
+                    .AsNoTracking()
+                    .Where(e=>
+                         e.UserId == UserId &&
+                         e.Date >= From &&
+                         e.Date <= To
+                     )
+                    .ToListAsync();
+        }
+        public async Task<List<Expense>> GetByCatAndPeriod(int CategoryId, string UserId, DateOnly From, DateOnly To)
+        {
+            return await _context.Expenses
+                .AsNoTracking()
+                .Where(e=>
+                e.CategoryId== CategoryId &&
+                e.UserId == UserId &&
+                e.Date >= From &&
+                e.Date <= To)
+                .ToListAsync();
+                
         }
         public async Task AddAsync(Expense expense)
         {
             await _context.Expenses.AddAsync(expense);
 
         }
-        public void DeleteAsync(Expense expense) 
+        public void Delete(Expense expense) 
         {
              _context.Expenses.Remove(expense);
         }

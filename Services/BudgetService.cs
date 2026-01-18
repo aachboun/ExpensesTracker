@@ -58,6 +58,7 @@ namespace ExpensesTracker.Services
 
             var budget = _mapper.Map<Budget>(dto);
             budget.UserId = UserId;
+            budget.CategoryId = CategoryId;
             budget.EffectiveFrom = DateOnly.FromDateTime(DateTime.UtcNow);
             await _budgetRepository.AddAsync(budget);
             await _budgetRepository.SaveChangesAsync();

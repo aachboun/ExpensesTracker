@@ -65,6 +65,12 @@ namespace ExpensesTracker.Data
                 .WithMany()
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Expense>()
+                .Property(e => e.Date)
+                .HasConversion(
+                    d => d.ToDateTime(TimeOnly.MinValue),
+                    d => DateOnly.FromDateTime(d)
+                   );
         }
 
     }

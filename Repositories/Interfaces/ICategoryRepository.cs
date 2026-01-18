@@ -7,6 +7,7 @@ namespace ExpensesTracker.Repositories.Interfaces
     {
         Task<List<Category>> GetAllAsync(string UserId);
         Task<Category> GetByIdAsync(int id, string UserId);
+        
 
         Task AddAsync(Category category);
         void DeleteAsync(Category category);
