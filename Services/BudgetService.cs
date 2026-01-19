@@ -52,7 +52,7 @@ namespace ExpensesTracker.Services
 
             if (existing != null)
             {
-                _logger.LogWarning(" Delete Failed | Budget Not found | id :{Id}, UserId : {UserId}", existing.Id, UserId);
+                _logger.LogWarning(" Create Failed  | Budget already exist  | id :{Id}, UserId : {UserId}", existing.Id, UserId);
                 throw new InvalidOperationException("An active budget already exists");
             }
 

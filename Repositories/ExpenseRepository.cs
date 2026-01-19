@@ -22,10 +22,10 @@ namespace ExpensesTracker.Repositories
                    .OrderByDescending(t=>t.Date)
                    .ToListAsync();    
         }
-        public async Task<Expense> GetById(int CategoryId ,string UserId)
+        public async Task<Expense> GetById(int Id ,string UserId)
         {
             return await _context.Expenses
-                .FirstOrDefaultAsync(e => e.CategoryId== CategoryId &&  e.UserId == UserId);
+                .FirstOrDefaultAsync(e => e.Id== Id &&  e.UserId == UserId);
 
         }
         public async Task<List<Expense>> GetByPeriod(string UserId, DateOnly From, DateOnly To)
